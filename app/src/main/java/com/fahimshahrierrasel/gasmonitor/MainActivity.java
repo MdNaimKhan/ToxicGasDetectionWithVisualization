@@ -21,12 +21,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.SeekBar;
 
+import com.fahimshahrierrasel.gasmonitor.model.Coordinate;
+import com.fahimshahrierrasel.gasmonitor.modeldata.CoordinatesData;
 import com.github.anastr.speedviewlib.PointerSpeedometer;
 import com.github.anastr.speedviewlib.SpeedView;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 1;
@@ -45,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private CameraCaptureSession cameraCaptureSession;
     private PointerSpeedometer carbonMonxideMeter;
     private SpeedView carbonDiOxideMeter;
+    private LineChart lineChart;
 
     /** Called when the activity is first created. */
     @Override
@@ -54,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         textureView = findViewById(R.id.texture_view);
 
-//        LineChart lineChart = findViewById(R.id.line_chart);
+        lineChart = findViewById(R.id.line_chart);
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                 CAMERA_REQUEST_CODE);
@@ -106,44 +120,44 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-//        List<Entry> entries = new ArrayList<>();
-//
-//        CoordinatesData data = new CoordinatesData();
-//
-//        for (Coordinate codata: data.getData()) {
-//            entries.add(new Entry(codata.getX(), codata.getY()));
-//        }
-//
-//        LineDataSet dataSet = new LineDataSet(entries, "Random Data");
-//        dataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-//        dataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
-//
-//        Legend legend = lineChart.getLegend();
-//        legend.setEnabled(true);
-//        legend.setTextColor(Color.parseColor("#FFFFFF"));
-//        legend.setForm(Legend.LegendForm.CIRCLE);
-//
-//        LineData lineData = new LineData(dataSet);
-//        lineData.setValueTextColor(Color.parseColor("#FFFFFF"));
-//        lineData.setHighlightEnabled(true);
-//
-//        lineChart.setData(lineData);
-//        lineChart.fitScreen();
-//
-//        XAxis xAxis = lineChart.getXAxis();
-//        YAxis leftY = lineChart.getAxisLeft();
-//        YAxis right = lineChart.getAxisRight();
-//
-//        xAxis.setGridColor(Color.parseColor("#FFFFFF"));
-//        xAxis.setTextColor(Color.parseColor("#FFFFFF"));
-//
-//        leftY.setGridColor(Color.parseColor("#FFFFFF"));
-//        leftY.setTextColor(Color.parseColor("#FFFFFF"));
-//
-//        right.setGridColor(Color.parseColor("#FFFFFF"));
-//        right.setTextColor(Color.parseColor("#FFFFFF"));
-//
-//        lineChart.animateXY(3000, 3000);
+        List<Entry> entries = new ArrayList<>();
+
+        CoordinatesData data = new CoordinatesData();
+
+        for (Coordinate codata: data.getData()) {
+            entries.add(new Entry(codata.getX(), codata.getY()));
+        }
+
+        LineDataSet dataSet = new LineDataSet(entries, "Random Data");
+        dataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+        dataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
+
+        Legend legend = lineChart.getLegend();
+        legend.setEnabled(true);
+        legend.setTextColor(Color.parseColor("#FFFFFF"));
+        legend.setForm(Legend.LegendForm.CIRCLE);
+
+        final LineData lineData = new LineData(dataSet);
+        lineData.setValueTextColor(Color.parseColor("#FFFFFF"));
+        lineData.setHighlightEnabled(true);
+
+        lineChart.setData(lineData);
+        lineChart.fitScreen();
+
+        XAxis xAxis = lineChart.getXAxis();
+        YAxis leftY = lineChart.getAxisLeft();
+        YAxis right = lineChart.getAxisRight();
+
+        xAxis.setGridColor(Color.parseColor("#FFFFFF"));
+        xAxis.setTextColor(Color.parseColor("#FFFFFF"));
+
+        leftY.setGridColor(Color.parseColor("#FFFFFF"));
+        leftY.setTextColor(Color.parseColor("#FFFFFF"));
+
+        right.setGridColor(Color.parseColor("#FFFFFF"));
+        right.setTextColor(Color.parseColor("#FFFFFF"));
+
+        lineChart.animateXY(3000, 3000);
 
         carbonMonxideMeter = findViewById(R.id.sv_co);
         carbonDiOxideMeter = findViewById(R.id.sv_co2);
@@ -174,6 +188,11 @@ public class MainActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progressVal = progress;
                 carbonMonxideMeter.speedTo(progressVal, 1000);
+                if(progressVal > 80)
+                    lineChart.setVisibility(View.VISIBLE);
+                else{
+                    lineChart.setVisibility(View.GONE);
+                }
             }
 
             @Override

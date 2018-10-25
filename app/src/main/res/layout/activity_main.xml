@@ -11,7 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/line_chart"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/meter_ll"/>
+
     <LinearLayout
+        android:id="@+id/meter_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
