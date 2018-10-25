@@ -21,26 +21,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
+import android.widget.SeekBar;
 
-import com.fahimshahrierrasel.gasmonitor.model.Coordinate;
-import com.fahimshahrierrasel.gasmonitor.modeldata.CoordinatesData;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.anastr.speedviewlib.PointerSpeedometer;
+import com.github.anastr.speedviewlib.SpeedView;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 1;
     private CameraManager cameraManager;
     private int cameraFacing;
@@ -55,6 +43,8 @@ public class MainActivity extends AppCompatActivity{
     private CaptureRequest.Builder captureRequestBuilder;
     private CaptureRequest captureRequest;
     private CameraCaptureSession cameraCaptureSession;
+    private PointerSpeedometer carbonMonxideMeter;
+    private SpeedView carbonDiOxideMeter;
 
     /** Called when the activity is first created. */
     @Override
@@ -64,7 +54,7 @@ public class MainActivity extends AppCompatActivity{
 
         textureView = findViewById(R.id.texture_view);
 
-        LineChart lineChart = findViewById(R.id.line_chart);
+//        LineChart lineChart = findViewById(R.id.line_chart);
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                 CAMERA_REQUEST_CODE);
@@ -116,45 +106,107 @@ public class MainActivity extends AppCompatActivity{
             }
         };
 
+//        List<Entry> entries = new ArrayList<>();
+//
+//        CoordinatesData data = new CoordinatesData();
+//
+//        for (Coordinate codata: data.getData()) {
+//            entries.add(new Entry(codata.getX(), codata.getY()));
+//        }
+//
+//        LineDataSet dataSet = new LineDataSet(entries, "Random Data");
+//        dataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+//        dataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
+//
+//        Legend legend = lineChart.getLegend();
+//        legend.setEnabled(true);
+//        legend.setTextColor(Color.parseColor("#FFFFFF"));
+//        legend.setForm(Legend.LegendForm.CIRCLE);
+//
+//        LineData lineData = new LineData(dataSet);
+//        lineData.setValueTextColor(Color.parseColor("#FFFFFF"));
+//        lineData.setHighlightEnabled(true);
+//
+//        lineChart.setData(lineData);
+//        lineChart.fitScreen();
+//
+//        XAxis xAxis = lineChart.getXAxis();
+//        YAxis leftY = lineChart.getAxisLeft();
+//        YAxis right = lineChart.getAxisRight();
+//
+//        xAxis.setGridColor(Color.parseColor("#FFFFFF"));
+//        xAxis.setTextColor(Color.parseColor("#FFFFFF"));
+//
+//        leftY.setGridColor(Color.parseColor("#FFFFFF"));
+//        leftY.setTextColor(Color.parseColor("#FFFFFF"));
+//
+//        right.setGridColor(Color.parseColor("#FFFFFF"));
+//        right.setTextColor(Color.parseColor("#FFFFFF"));
+//
+//        lineChart.animateXY(3000, 3000);
 
-        List<Entry> entries = new ArrayList<>();
+        carbonMonxideMeter = findViewById(R.id.sv_co);
+        carbonDiOxideMeter = findViewById(R.id.sv_co2);
 
-        CoordinatesData data = new CoordinatesData();
+        carbonMonxideMeter.setMaxSpeed(100f);
+//        carbonMonxideMeter.speedTo(200f, 10000);
 
-        for (Coordinate codata: data.getData()) {
-            entries.add(new Entry(codata.getX(), codata.getY()));
-        }
+        // in this speedometer, you can change UnitText Size
+        carbonMonxideMeter.setUnitTextSize(15); //def : 5dp
+        // change the point color
+        carbonMonxideMeter.setPointerColor(Color.RED);
+        // change Sweep speedometer color
+        carbonMonxideMeter.setSpeedometerColor(Color.GREEN);
 
-        LineDataSet dataSet = new LineDataSet(entries, "Random Data");
-        dataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-        dataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        carbonDiOxideMeter.setMaxSpeed(100);
+        carbonDiOxideMeter.speedTo(0);
 
-        Legend legend = lineChart.getLegend();
-        legend.setEnabled(true);
-        legend.setTextColor(Color.parseColor("#FFFFFF"));
-        legend.setForm(Legend.LegendForm.CIRCLE);
+        SeekBar co = findViewById(R.id.co);
+        SeekBar co2 = findViewById(R.id.co2);
 
-        LineData lineData = new LineData(dataSet);
-        lineData.setValueTextColor(Color.parseColor("#FFFFFF"));
-        lineData.setHighlightEnabled(true);
+        co.setProgress(0);
+        co2.setProgress(0);
 
-        lineChart.setData(lineData);
-        lineChart.fitScreen();
+        co.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progressVal = 0;
 
-        XAxis xAxis = lineChart.getXAxis();
-        YAxis leftY = lineChart.getAxisLeft();
-        YAxis right = lineChart.getAxisRight();
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progressVal = progress;
+                carbonMonxideMeter.speedTo(progressVal, 1000);
+            }
 
-        xAxis.setGridColor(Color.parseColor("#FFFFFF"));
-        xAxis.setTextColor(Color.parseColor("#FFFFFF"));
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
-        leftY.setGridColor(Color.parseColor("#FFFFFF"));
-        leftY.setTextColor(Color.parseColor("#FFFFFF"));
+            }
 
-        right.setGridColor(Color.parseColor("#FFFFFF"));
-        right.setTextColor(Color.parseColor("#FFFFFF"));
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
-        lineChart.animateXY(3000, 3000);
+            }
+        });
+
+        co2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progressVal = 0;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progressVal = progress;
+                carbonDiOxideMeter.speedTo(progressVal, 1000);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
 
     }
 
