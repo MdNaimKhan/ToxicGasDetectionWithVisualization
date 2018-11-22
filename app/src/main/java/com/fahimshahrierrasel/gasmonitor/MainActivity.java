@@ -18,13 +18,17 @@ import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
-import android.view.View;
-import android.widget.SeekBar;
 
+import com.fahimshahrierrasel.gasmonitor.api.ApiUtils;
+import com.fahimshahrierrasel.gasmonitor.api.service.OutputService;
+import com.fahimshahrierrasel.gasmonitor.api.service.TokenService;
 import com.fahimshahrierrasel.gasmonitor.model.Coordinate;
+import com.fahimshahrierrasel.gasmonitor.model.Output;
+import com.fahimshahrierrasel.gasmonitor.model.Token;
 import com.fahimshahrierrasel.gasmonitor.modeldata.CoordinatesData;
 import com.github.anastr.speedviewlib.PointerSpeedometer;
 import com.github.anastr.speedviewlib.SpeedView;
@@ -40,6 +44,10 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 1;
@@ -59,12 +67,19 @@ public class MainActivity extends AppCompatActivity {
     private PointerSpeedometer carbonMonxideMeter;
     private SpeedView carbonDiOxideMeter;
     private LineChart lineChart;
+    private Token token;
+    Handler handler;
+    private Runnable runnable;
 
-    /** Called when the activity is first created. */
+    public String TAG = getClass().getSimpleName();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getAuthenticationToken();
+        handler = new Handler();
 
         textureView = findViewById(R.id.texture_view);
 
@@ -124,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
         CoordinatesData data = new CoordinatesData();
 
-        for (Coordinate codata: data.getData()) {
+        for (Coordinate codata : data.getData()) {
             entries.add(new Entry(codata.getX(), codata.getY()));
         }
 
@@ -175,65 +190,93 @@ public class MainActivity extends AppCompatActivity {
         carbonDiOxideMeter.setMaxSpeed(100);
         carbonDiOxideMeter.speedTo(0);
 
-        SeekBar co = findViewById(R.id.co);
-        SeekBar co2 = findViewById(R.id.co2);
+        runOutputService();
 
-        co.setProgress(0);
-        co2.setProgress(0);
+    }
 
-        co.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressVal = 0;
-
+    private void runOutputService() {
+        runnable = new Runnable() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressVal = progress;
-                carbonMonxideMeter.speedTo(progressVal, 1000);
-                if(progressVal > 80)
-                    lineChart.setVisibility(View.VISIBLE);
-                else{
-                    lineChart.setVisibility(View.GONE);
+            public void run() {
+                if(token != null)
+                    getOutputData();
+                else
+                    Log.d(TAG, "Token is null");
+
+                handler.postDelayed(this, 1500);
+            }
+        };
+
+        handler.post(runnable);
+    }
+
+    private void getOutputData() {
+        String tokenString = String.format("Bearer %s", token.getAccessToken());
+        String accept = "application/json, text/plain, */*";
+        OutputService outputService = ApiUtils.getOutputService();
+
+        Call<Output> call = outputService.getDeviceOutput(tokenString, accept, "001");
+
+        call.enqueue(new Callback<Output>() {
+            @Override
+            public void onResponse(Call<Output> call, Response<Output> response) {
+                if (response.code() == 200) {
+                    Output output = response.body();
+                    Log.d(TAG, "Output: " + String.valueOf(output.getOut()));
+                    setOutPutToUI(output);
                 }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onFailure(Call<Output> call, Throwable t) {
 
             }
         });
+    }
 
-        co2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressVal = 0;
+    private void setOutPutToUI(Output output) {
+        if (output != null)
+            carbonMonxideMeter.speedTo(output.getOut(), 1000);
+    }
 
+    private void getAuthenticationToken() {
+
+        TokenService tokenService = ApiUtils.getTokenService();
+        Call<Token> call = tokenService.getToken("password", "naimKhan",
+                "01943781335");
+
+        call.enqueue(new Callback<Token>() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressVal = progress;
-                carbonDiOxideMeter.speedTo(progressVal, 1000);
+            public void onResponse(Call<Token> call, Response<Token> response) {
+                if (response.code() == 200) {
+                    Token token = response.body();
+                    setToken(token);
+                }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onFailure(Call<Token> call, Throwable t) {
 
             }
         });
+    }
 
+    private void setToken(Token token) {
+        this.token = token;
+        runOutputService();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         openBackgroundThread();
-        if(textureView.isAvailable()) {
+        if (textureView.isAvailable()) {
             setUpCamera();
             openCamera();
         } else {
@@ -249,12 +292,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void closeCamera() {
-        if(cameraCaptureSession != null) {
+        if (cameraCaptureSession != null) {
             cameraCaptureSession.close();
             cameraCaptureSession = null;
         }
 
-        if(cameraDevice != null) {
+        if (cameraDevice != null) {
             cameraDevice.close();
             cameraDevice = null;
         }
@@ -281,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
                     new CameraCaptureSession.StateCallback() {
                         @Override
                         public void onConfigured(@NonNull CameraCaptureSession session) {
-                            if(cameraDevice == null)
+                            if (cameraDevice == null)
                                 return;
                             try {
                                 captureRequest = captureRequestBuilder.build();
@@ -306,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openCamera() {
         try {
-            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                     == PackageManager.PERMISSION_GRANTED) {
                 cameraManager.openCamera(cameraId, stateCallback, backgroundHandler);
             }
@@ -317,10 +360,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpCamera() {
         try {
-            for (String cameraId: cameraManager.getCameraIdList()) {
+            for (String cameraId : cameraManager.getCameraIdList()) {
                 CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
 
-                if(cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) == cameraFacing ) {
+                if (cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) == cameraFacing) {
                     StreamConfigurationMap streamConfigurationMap = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
                     previewSize = streamConfigurationMap.getOutputSizes(SurfaceTexture.class)[0];
                     this.cameraId = cameraId;
