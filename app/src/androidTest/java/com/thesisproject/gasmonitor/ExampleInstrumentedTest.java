@@ -1,4 +1,4 @@
-package com.fahimshahrierrasel.gasmonitor;
+package com.thesisproject.gasmonitor;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

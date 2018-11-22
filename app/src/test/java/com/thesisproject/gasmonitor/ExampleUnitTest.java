@@ -1,4 +1,4 @@
-package com.fahimshahrierrasel.gasmonitor;
+package com.thesisproject.gasmonitor;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.fahimshahrierrasel.gasmonitor.model;
+package com.thesisproject.gasmonitor.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

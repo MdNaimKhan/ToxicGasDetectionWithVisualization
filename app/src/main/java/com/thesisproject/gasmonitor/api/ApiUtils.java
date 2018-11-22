@@ -1,7 +1,7 @@
-package com.fahimshahrierrasel.gasmonitor.api;
+package com.thesisproject.gasmonitor.api;
 
-import com.fahimshahrierrasel.gasmonitor.api.service.OutputService;
-import com.fahimshahrierrasel.gasmonitor.api.service.TokenService;
+import com.thesisproject.gasmonitor.api.service.OutputService;
+import com.thesisproject.gasmonitor.api.service.TokenService;
 
 public class ApiUtils {
     private static final String BASE_URL = "https://api.thinger.io";

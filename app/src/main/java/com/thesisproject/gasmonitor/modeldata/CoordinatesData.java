@@ -1,6 +1,6 @@
-package com.fahimshahrierrasel.gasmonitor.modeldata;
+package com.thesisproject.gasmonitor.modeldata;
 
-import com.fahimshahrierrasel.gasmonitor.model.Coordinate;
+import com.thesisproject.gasmonitor.model.Coordinate;
 
 import java.util.ArrayList;
 import java.util.List;

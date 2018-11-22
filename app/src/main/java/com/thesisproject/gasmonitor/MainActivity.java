@@ -1,4 +1,4 @@
-package com.fahimshahrierrasel.gasmonitor;
+package com.thesisproject.gasmonitor;
 
 import android.Manifest;
 import android.content.Context;
@@ -23,13 +23,13 @@ import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 
-import com.fahimshahrierrasel.gasmonitor.api.ApiUtils;
-import com.fahimshahrierrasel.gasmonitor.api.service.OutputService;
-import com.fahimshahrierrasel.gasmonitor.api.service.TokenService;
-import com.fahimshahrierrasel.gasmonitor.model.Coordinate;
-import com.fahimshahrierrasel.gasmonitor.model.Output;
-import com.fahimshahrierrasel.gasmonitor.model.Token;
-import com.fahimshahrierrasel.gasmonitor.modeldata.CoordinatesData;
+import com.thesisproject.gasmonitor.api.ApiUtils;
+import com.thesisproject.gasmonitor.api.service.OutputService;
+import com.thesisproject.gasmonitor.api.service.TokenService;
+import com.thesisproject.gasmonitor.model.Coordinate;
+import com.thesisproject.gasmonitor.model.Output;
+import com.thesisproject.gasmonitor.model.Token;
+import com.thesisproject.gasmonitor.modeldata.CoordinatesData;
 import com.github.anastr.speedviewlib.PointerSpeedometer;
 import com.github.anastr.speedviewlib.SpeedView;
 import com.github.mikephil.charting.charts.LineChart;

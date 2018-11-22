@@ -1,4 +1,4 @@
-package com.fahimshahrierrasel.gasmonitor.api;
+package com.thesisproject.gasmonitor.api;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

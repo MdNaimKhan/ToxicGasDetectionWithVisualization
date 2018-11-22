@@ -1,4 +1,4 @@
-package com.fahimshahrierrasel.gasmonitor.model;
+package com.thesisproject.gasmonitor.model;
 
 public class Coordinate {
     int x,y;

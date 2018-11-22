@@ -1,6 +1,6 @@
-package com.fahimshahrierrasel.gasmonitor.api.service;
+package com.thesisproject.gasmonitor.api.service;
 
-import com.fahimshahrierrasel.gasmonitor.model.Token;
+import com.thesisproject.gasmonitor.model.Token;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
