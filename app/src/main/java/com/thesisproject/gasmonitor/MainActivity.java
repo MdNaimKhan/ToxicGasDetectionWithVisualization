@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
         carbonMonoxideMeter = findViewById(R.id.sv_co);
 
-        carbonMonoxideMeter.setMaxSpeed(100f);
+        carbonMonoxideMeter.setMaxSpeed(2000);
 
         // in this speedometer, you can change UnitText Size
         carbonMonoxideMeter.setUnitTextSize(15); //def : 5dp
@@ -198,14 +198,18 @@ public class MainActivity extends AppCompatActivity {
             carbonMonoxideMeter.speedTo(output.getOut(), 1000);
             int sensorValue = output.getOut();
 
-            if (sensorValue <= 30) {
+            if (sensorValue <= 100) {
                 warningText.setText("Healthy");
-            } else if (sensorValue <= 40) {
+                warningText.setTextColor(Color.WHITE);
+            } else if (sensorValue <= 200) {
                 warningText.setText("Warning");
-            } else if (sensorValue <= 100) {
+                warningText.setTextColor(Color.YELLOW);
+            } else if (sensorValue <= 800) {
                 warningText.setText("Danger");
+                warningText.setTextColor(Color.RED);
             } else {
                 warningText.setVisibility(View.GONE);
+
             }
 
         }

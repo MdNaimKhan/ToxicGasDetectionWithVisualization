@@ -15,7 +15,7 @@
         android:id="@+id/warning_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
+        android:textSize="27sp"
         android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/sv_co"
@@ -38,6 +38,6 @@
         app:sv_unit=" PPM"
         app:sv_unitTextColor="#FFFFFF"
         app:sv_unitTextSize="15dp"
-        app:sv_withTremble="true" />
+        app:sv_withTremble="false" />
 
 </android.support.constraint.ConstraintLayout>
