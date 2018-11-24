@@ -11,47 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/line_chart"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/meter_ll"/>
 
-    <LinearLayout
-        android:id="@+id/meter_ll"
-        android:layout_width="match_parent"
+    <com.github.anastr.speedviewlib.PointerSpeedometer
+        android:id="@+id/sv_co"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:sv_backgroundCircleColor="@android:color/transparent"
+        app:sv_pointerColor="#ffff00"
+        app:sv_speedTextColor="#ffe600"
+        app:sv_speedometerColor="#ffb26b"
+        app:sv_unit=" PPM"
+        app:sv_unitTextColor="#FFFFFF"
+        app:sv_unitTextSize="15dp" />
 
-        <com.github.anastr.speedviewlib.PointerSpeedometer
-            android:id="@+id/sv_co"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:padding="5dp"
-            app:sv_pointerColor="#ffff00"
-            app:sv_speedTextColor="#ffe600"
-            app:sv_speedometerColor="#ffb26b"
-            app:sv_unit=" PPM"
-            app:sv_unitTextColor="#FFFFFF"
-            app:sv_unitTextSize="15dp" />
-
-        <com.github.anastr.speedviewlib.SpeedView
-            android:id="@+id/sv_co2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:padding="5dp"
-            app:sv_speedTextColor="#ffe600"
-            app:sv_unit=" PPM"
-            app:sv_unitTextColor="#FFFFFF" />
-    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

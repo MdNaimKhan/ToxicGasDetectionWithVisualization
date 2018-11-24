@@ -31,7 +31,6 @@ import com.thesisproject.gasmonitor.model.Output;
 import com.thesisproject.gasmonitor.model.Token;
 import com.thesisproject.gasmonitor.modeldata.CoordinatesData;
 import com.github.anastr.speedviewlib.PointerSpeedometer;
-import com.github.anastr.speedviewlib.SpeedView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -64,9 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private CaptureRequest.Builder captureRequestBuilder;
     private CaptureRequest captureRequest;
     private CameraCaptureSession cameraCaptureSession;
-    private PointerSpeedometer carbonMonxideMeter;
-    private SpeedView carbonDiOxideMeter;
-    private LineChart lineChart;
+    private PointerSpeedometer carbonMonoxideMeter;;
     private Token token;
     Handler handler;
     private Runnable runnable;
@@ -82,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler();
 
         textureView = findViewById(R.id.texture_view);
-
-        lineChart = findViewById(R.id.line_chart);
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                 CAMERA_REQUEST_CODE);
@@ -135,60 +130,17 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        List<Entry> entries = new ArrayList<>();
 
-        CoordinatesData data = new CoordinatesData();
+        carbonMonoxideMeter = findViewById(R.id.sv_co);
 
-        for (Coordinate codata : data.getData()) {
-            entries.add(new Entry(codata.getX(), codata.getY()));
-        }
-
-        LineDataSet dataSet = new LineDataSet(entries, "Random Data");
-        dataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-        dataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
-
-        Legend legend = lineChart.getLegend();
-        legend.setEnabled(true);
-        legend.setTextColor(Color.parseColor("#FFFFFF"));
-        legend.setForm(Legend.LegendForm.CIRCLE);
-
-        final LineData lineData = new LineData(dataSet);
-        lineData.setValueTextColor(Color.parseColor("#FFFFFF"));
-        lineData.setHighlightEnabled(true);
-
-        lineChart.setData(lineData);
-        lineChart.fitScreen();
-
-        XAxis xAxis = lineChart.getXAxis();
-        YAxis leftY = lineChart.getAxisLeft();
-        YAxis right = lineChart.getAxisRight();
-
-        xAxis.setGridColor(Color.parseColor("#FFFFFF"));
-        xAxis.setTextColor(Color.parseColor("#FFFFFF"));
-
-        leftY.setGridColor(Color.parseColor("#FFFFFF"));
-        leftY.setTextColor(Color.parseColor("#FFFFFF"));
-
-        right.setGridColor(Color.parseColor("#FFFFFF"));
-        right.setTextColor(Color.parseColor("#FFFFFF"));
-
-        lineChart.animateXY(3000, 3000);
-
-        carbonMonxideMeter = findViewById(R.id.sv_co);
-        carbonDiOxideMeter = findViewById(R.id.sv_co2);
-
-        carbonMonxideMeter.setMaxSpeed(100f);
-//        carbonMonxideMeter.speedTo(200f, 10000);
+        carbonMonoxideMeter.setMaxSpeed(100f);
 
         // in this speedometer, you can change UnitText Size
-        carbonMonxideMeter.setUnitTextSize(15); //def : 5dp
+        carbonMonoxideMeter.setUnitTextSize(15); //def : 5dp
         // change the point color
-        carbonMonxideMeter.setPointerColor(Color.RED);
+        carbonMonoxideMeter.setPointerColor(Color.RED);
         // change Sweep speedometer color
-        carbonMonxideMeter.setSpeedometerColor(Color.GREEN);
-
-        carbonDiOxideMeter.setMaxSpeed(100);
-        carbonDiOxideMeter.speedTo(0);
+        carbonMonoxideMeter.setSpeedometerColor(Color.GREEN);
 
         runOutputService();
 
@@ -236,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setOutPutToUI(Output output) {
         if (output != null)
-            carbonMonxideMeter.speedTo(output.getOut(), 1000);
+            carbonMonoxideMeter.speedTo(output.getOut(), 1000);
     }
 
     private void getAuthenticationToken() {
