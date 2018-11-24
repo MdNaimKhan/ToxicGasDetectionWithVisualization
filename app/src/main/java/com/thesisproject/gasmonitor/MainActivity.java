@@ -22,6 +22,8 @@ import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
+import android.widget.TextView;
 
 import com.thesisproject.gasmonitor.api.ApiUtils;
 import com.thesisproject.gasmonitor.api.service.OutputService;
@@ -63,12 +65,14 @@ public class MainActivity extends AppCompatActivity {
     private CaptureRequest.Builder captureRequestBuilder;
     private CaptureRequest captureRequest;
     private CameraCaptureSession cameraCaptureSession;
-    private PointerSpeedometer carbonMonoxideMeter;;
+    private PointerSpeedometer carbonMonoxideMeter;
+    ;
     private Token token;
     Handler handler;
     private Runnable runnable;
 
     public String TAG = getClass().getSimpleName();
+    private TextView warningText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler();
 
         textureView = findViewById(R.id.texture_view);
+        warningText = findViewById(R.id.warning_text);
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                 CAMERA_REQUEST_CODE);
@@ -150,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                if(token != null)
+                if (token != null)
                     getOutputData();
                 else
                     Log.d(TAG, "Token is null");
@@ -187,8 +192,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setOutPutToUI(Output output) {
-        if (output != null)
+        if (output != null) {
+            warningText.setVisibility(View.VISIBLE);
+
             carbonMonoxideMeter.speedTo(output.getOut(), 1000);
+            int sensorValue = output.getOut();
+
+            if (sensorValue <= 30) {
+                warningText.setText("Healthy");
+            } else if (sensorValue <= 40) {
+                warningText.setText("Warning");
+            } else if (sensorValue <= 100) {
+                warningText.setText("Danger");
+            } else {
+                warningText.setVisibility(View.GONE);
+            }
+
+        }
     }
 
     private void getAuthenticationToken() {
