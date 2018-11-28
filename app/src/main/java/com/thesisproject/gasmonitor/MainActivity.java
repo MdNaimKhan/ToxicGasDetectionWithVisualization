@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     private CaptureRequest captureRequest;
     private CameraCaptureSession cameraCaptureSession;
     private PointerSpeedometer carbonMonoxideMeter;
+    private PointerSpeedometer alcoholMeter;
+    private PointerSpeedometer airqMeter;
     ;
     private Token token;
     Handler handler;
@@ -135,16 +137,17 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
+        alcoholMeter=findViewById(R.id.sv_alcohol);
         carbonMonoxideMeter = findViewById(R.id.sv_co);
+        airqMeter=findViewById(R.id.sv_airq);
 
+        alcoholMeter.setMaxSpeed(5000);
         carbonMonoxideMeter.setMaxSpeed(2000);
+        airqMeter.setMaxSpeed(2000);
 
-        // in this speedometer, you can change UnitText Size
-        carbonMonoxideMeter.setUnitTextSize(15); //def : 5dp
-        // change the point color
+
+        carbonMonoxideMeter.setUnitTextSize(15);
         carbonMonoxideMeter.setPointerColor(Color.RED);
-        // change Sweep speedometer color
         carbonMonoxideMeter.setSpeedometerColor(Color.GREEN);
 
         runOutputService();
@@ -172,15 +175,47 @@ public class MainActivity extends AppCompatActivity {
         String accept = "application/json, text/plain, */*";
         OutputService outputService = ApiUtils.getOutputService();
 
-        Call<Output> call = outputService.getDeviceOutput(tokenString, accept, "001");
+        Call<Output> callAirq = outputService.getDeviceOutputAirQuality(tokenString, accept, "001");
+        Call<Output> callAlcohol = outputService.getDeviceOutputAlcohol(tokenString, accept, "001");
+        Call<Output> callCO = outputService.getDeviceOutputCO(tokenString, accept, "001");
 
-        call.enqueue(new Callback<Output>() {
+        callAirq.enqueue(new Callback<Output>() {
             @Override
             public void onResponse(Call<Output> call, Response<Output> response) {
                 if (response.code() == 200) {
                     Output output = response.body();
                     Log.d(TAG, "Output: " + String.valueOf(output.getOut()));
-                    setOutPutToUI(output);
+                    setOutPutToUIAirq(output);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Output> call, Throwable t) {
+
+            }
+        });
+        callAlcohol.enqueue(new Callback<Output>() {
+            @Override
+            public void onResponse(Call<Output> call, Response<Output> response) {
+                if (response.code() == 200) {
+                    Output output = response.body();
+                    Log.d(TAG, "Output: " + String.valueOf(output.getOut()));
+                    setOutPutToUIAlcohol(output);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Output> call, Throwable t) {
+
+            }
+        });
+        callCO.enqueue(new Callback<Output>() {
+            @Override
+            public void onResponse(Call<Output> call, Response<Output> response) {
+                if (response.code() == 200) {
+                    Output output = response.body();
+                    Log.d(TAG, "Output: " + String.valueOf(output.getOut()));
+                    setOutPutToUICO(output);
                 }
             }
 
@@ -191,11 +226,26 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setOutPutToUI(Output output) {
+    private void setOutPutToUICO(Output output) {
+        if(output != null){
+            carbonMonoxideMeter.speedTo(output.getOut(), 1000);
+
+        }
+
+    }
+
+    private void setOutPutToUIAlcohol(Output output) {
+        if(output != null){
+            alcoholMeter.speedTo(output.getOut(), 1000);
+
+        }
+    }
+
+    private void setOutPutToUIAirq(Output output) {
         if (output != null) {
             warningText.setVisibility(View.VISIBLE);
 
-            carbonMonoxideMeter.speedTo(output.getOut(), 1000);
+            airqMeter.speedTo(output.getOut(), 1000);
             int sensorValue = output.getOut();
 
             if (sensorValue <= 100) {
@@ -213,6 +263,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+
+    }
+
+    private void setOutPutToUI(Output output) {
+
     }
 
     private void getAuthenticationToken() {

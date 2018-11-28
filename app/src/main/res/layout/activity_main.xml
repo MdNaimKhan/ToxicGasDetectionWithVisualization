@@ -18,12 +18,12 @@
         android:textSize="27sp"
         android:textStyle="bold"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/sv_co"
+        app:layout_constraintBottom_toTopOf="@+id/sv_airq"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
     <com.github.anastr.speedviewlib.PointerSpeedometer
-        android:id="@+id/sv_co"
+        android:id="@+id/sv_airq"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -39,5 +39,59 @@
         app:sv_unitTextColor="#FFFFFF"
         app:sv_unitTextSize="15dp"
         app:sv_withTremble="false" />
+
+    <LinearLayout
+        android:id="@+id/meter_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/warning_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+
+      <com.github.anastr.speedviewlib.PointerSpeedometer
+          android:id="@+id/sv_alcohol"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:padding="5dp"
+          android:layout_weight="1"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toRightOf="parent"
+          app:sv_backgroundCircleColor="@android:color/transparent"
+          app:sv_pointerColor="#ffff00"
+          app:sv_speedTextColor="#ffe600"
+          app:sv_speedometerColor="#ffb26b"
+          app:sv_unit=" PPM"
+          app:sv_unitTextColor="#FFFFFF"
+          app:sv_unitTextSize="5dp"
+          app:sv_withTremble="false" />
+
+
+
+        >
+      <com.github.anastr.speedviewlib.PointerSpeedometer
+          android:id="@+id/sv_co"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:padding="5dp"
+          android:layout_weight="1"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toRightOf="parent"
+          app:sv_backgroundCircleColor="@android:color/transparent"
+          app:sv_pointerColor="#ffff00"
+          app:sv_speedTextColor="#ffe600"
+          app:sv_speedometerColor="#ffb26b"
+          app:sv_unit=" PPM"
+          app:sv_unitTextColor="#FFFFFF"
+          app:sv_unitTextSize="15dp"
+          app:sv_withTremble="false" />
+      >
+    </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>
