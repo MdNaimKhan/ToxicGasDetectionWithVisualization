@@ -64,6 +64,7 @@
           app:sv_pointerColor="#ffff00"
           app:sv_speedTextColor="#ffe600"
           app:sv_speedometerColor="#ffb26b"
+
           app:sv_unit=" PPM"
           app:sv_unitTextColor="#FFFFFF"
           app:sv_unitTextSize="5dp"
@@ -88,7 +89,7 @@
           app:sv_speedometerColor="#ffb26b"
           app:sv_unit=" PPM"
           app:sv_unitTextColor="#FFFFFF"
-          app:sv_unitTextSize="15dp"
+          app:sv_unitTextSize="5dp"
           app:sv_withTremble="false" />
       >
     </LinearLayout>

@@ -145,6 +145,11 @@ public class MainActivity extends AppCompatActivity {
         carbonMonoxideMeter.setMaxSpeed(2000);
         airqMeter.setMaxSpeed(2000);
 
+        alcoholMeter.setPointerColor(Color.BLUE);
+        alcoholMeter.setSpeedometerColor(Color.RED);
+
+
+
 
         carbonMonoxideMeter.setUnitTextSize(15);
         carbonMonoxideMeter.setPointerColor(Color.RED);
@@ -248,16 +253,26 @@ public class MainActivity extends AppCompatActivity {
             airqMeter.speedTo(output.getOut(), 1000);
             int sensorValue = output.getOut();
 
-            if (sensorValue <= 100) {
-                warningText.setText("Healthy");
-                warningText.setTextColor(Color.WHITE);
-            } else if (sensorValue <= 200) {
-                warningText.setText("Warning");
+            if (sensorValue <=50) {
+                warningText.setText("GOOD");
+                warningText.setTextColor(Color.GREEN);
+            } else if (sensorValue>=51  && sensorValue <=100) {
+                warningText.setText("MODERATRE");
                 warningText.setTextColor(Color.YELLOW);
-            } else if (sensorValue <= 800) {
-                warningText.setText("Danger");
+            } else if (sensorValue>=101  && sensorValue <=150) {
+                warningText.setText("UNHEALTHY SENSITIVE");
+                warningText.setTextColor(Color.argb(255,255,165,0));
+            } else if (sensorValue>=151  && sensorValue <=200) {
+                warningText.setText("UNHEALTHY");
                 warningText.setTextColor(Color.RED);
-            } else {
+            } else if (sensorValue>=201  && sensorValue <=300) {
+                warningText.setText("VERY UNHEALTHY");
+                warningText.setTextColor(Color.argb(255,128,0,128));
+            }else if (sensorValue>=301) {
+                warningText.setText("HAZARDOUS");
+                warningText.setTextColor(Color.argb(255,128,0,0));
+            }
+            else {
                 warningText.setVisibility(View.GONE);
 
             }
