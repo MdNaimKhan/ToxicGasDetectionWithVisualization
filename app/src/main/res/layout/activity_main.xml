@@ -51,7 +51,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
             android:layout_marginTop="-80dp"
-            android:text="1st Meter"
+            android:textColor="@color/design_default_color_primary_dark"
+            android:text="AIRQ"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -92,8 +93,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
+                android:textColor="@color/colorAccent"
                 android:layout_marginTop="-70dp"
-                android:text="2nd Meter" />
+                android:text="Alcohol" />
 
         </LinearLayout>
 
@@ -122,8 +124,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
+                android:textColor="@color/colorPrimary"
                 android:layout_marginTop="-70dp"
-                android:text="3rd Meter" />
+                android:text="CO" />
 
         </LinearLayout>
     </LinearLayout>
